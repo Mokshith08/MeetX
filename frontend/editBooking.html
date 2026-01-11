@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Edit Booking</title>
+    <link rel="icon" href="img/icon.jpg" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      body {
+        font-family: Poppins, system-ui;
+        background: #eef3f8;
+        margin: 0;
+      }
+      .container {
+        max-width: 620px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      }
+      label {
+        display: block;
+        margin-top: 12px;
+        font-weight: 600;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-top: 8px;
+      }
+      button {
+        padding: 12px 18px;
+        border-radius: 10px;
+        border: none;
+        background: #004aad;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Edit Booking</h2>
+
+      <label>Date</label>
+      <input type="date" id="date" />
+
+      <label>Start Time</label>
+      <input type="time" id="start" />
+
+      <label>End Time</label>
+      <input type="time" id="end" />
+
+      <label>Room</label>
+      <select id="room"></select>
+
+      <label>Purpose</label>
+      <textarea id="purpose" rows="4"></textarea>
+
+      <button onclick="updateBooking()">Save Changes</button>
+    </div>
+
+    <script>
+      const booking_id = sessionStorage.getItem("edit_booking_id");
+      if (!booking_id) {
+        alert("No booking selected");
+        window.location.href = "dashboard.html";
+      }
+
+      // LOAD ROOMS FROM DATABASE
+      async function loadRooms() {
+        const res = await fetch("getRooms.php");
+        if (!res.ok) return;
+
+        const rooms = await res.json();
+        const select = document.getElementById("room");
+        select.innerHTML = "";
+
+        rooms.forEach((r) => {
+          const opt = document.createElement("option");
+          opt.value = r.room_name;
+          opt.textContent = `${r.room_name} (₹${r.rate_per_hour}/hr)`;
+          select.appendChild(opt);
+        });
+      }
+
+      // LOAD BOOKING DATA INTO FIELDS
+      async function loadBooking() {
+        const res = await fetch("crud.php?action=get&id=" + booking_id);
+        if (!res.ok) {
+          alert("Unable to fetch booking");
+          window.location.href = "dashboard.html";
+          return;
+        }
+
+        const b = await res.json();
+
+        document.getElementById("date").value = b.booking_date;
+        document.getElementById("start").value = b.start_time;
+        document.getElementById("end").value = b.end_time;
+        document.getElementById("purpose").value = b.purpose;
+
+        await loadRooms();
+        document.getElementById("room").value = b.room;
+      }
+
+      // UPDATE BOOKING
+      async function updateBooking() {
+        const fd = new FormData();
+        fd.append("action", "update");
+        fd.append("id", booking_id);
+        fd.append("date", document.getElementById("date").value);
+        fd.append("start", document.getElementById("start").value);
+        fd.append("end", document.getElementById("end").value);
+        fd.append("room", document.getElementById("room").value);
+        fd.append("purpose", document.getElementById("purpose").value);
+
+        const res = await fetch("crud.php", {
+          method: "POST",
+          body: fd,
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          alert("Booking updated successfully");
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Failed to update booking");
+        }
+      }
+
+      loadBooking();
+    </script>
+  </body>
+</html>

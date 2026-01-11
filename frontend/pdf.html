@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+/* Load DejaVuSans from localhost (works in DomPDF) */
+@font-face {
+    font-family: 'DejaVu';
+    src: url('http://localhost/meetingroom/fonts/DejaVuSans.ttf') format('truetype');
+}
+
+body {
+    font-family: 'DejaVu', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.invoice-box {
+    width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.header img {
+    height: 90px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+
+h1 {
+    font-size: 32px;
+    margin: 0;
+    color: #004aad;
+}
+
+h2 {
+    text-align: center;
+    color: #004aad;
+    margin: 10px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th {
+    background: #004aad;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    background: #f5f8ff;
+    padding: 10px;
+}
+
+.total-box {
+    margin-top: 20px;
+    background: #004aad;
+    color: white;
+    padding: 18px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* Prevent extra empty page */
+html, body {
+    height: 100%;
+}
+* {
+    page-break-inside: avoid;
+}
+</style>
+
+</head>
+<body>
+
+<div class="invoice-box">
+
+    <div class="header">
+        <img src="http://localhost/meetingroomsys/img/FullLogo.jpg" alt="MeetX Logo">
+        <h1>MeetX</h1>
+    </div>
+
+    <h2>Booking Invoice</h2>
+
+    <table>
+        <tr><th colspan="2">Booking Information</th></tr>
+        <tr><td>Booking ID</td><td>{{BOOKING_ID}}</td></tr>
+        <tr><td>Date</td><td>{{DATE}}</td></tr>
+        <tr><td>Start Time</td><td>{{START}}</td></tr>
+        <tr><td>End Time</td><td>{{END}}</td></tr>
+        <tr><td>Purpose</td><td>{{PURPOSE}}</td></tr>
+        <tr><td>Room</td><td>{{ROOM}}</td></tr>
+        <tr><td>Rate Per Hour</td><td>₹{{RATE}}</td></tr>
+    </table>
+
+    <table>
+        <tr><th colspan="2">Employee Information</th></tr>
+        <tr><td>Name</td><td>{{NAME}}</td></tr>
+        <tr><td>Email</td><td>{{EMAIL}}</td></tr>
+        <tr><td>Phone</td><td>{{PHONE}}</td></tr>
+        <tr><td>Organisation</td><td>{{ORG}}</td></tr>
+    </table>
+
+    <div class="total-box">
+        Total Fare: ₹{{FARE}}
+    </div>
+
+</div>
+
+</body>
+</html>

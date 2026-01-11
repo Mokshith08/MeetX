@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Booking Summary</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="img/icon.jpg" />
+    <style>
+      body {
+        font-family: Poppins, system-ui;
+        background: #eef3f8;
+        margin: 0;
+      }
+      header {
+        background: #004aad;
+        padding: 25px 0;
+        text-align: center;
+        color: white;
+      }
+      .box {
+        max-width: 760px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 28px;
+        border-radius: 12px;
+        border: 2px solid #dbe4f3;
+      }
+      h2 {
+        color: #004aad;
+        margin-top: 18px;
+        margin-bottom: 8px;
+      }
+      .label {
+        font-weight: 600;
+        color: #004aad;
+        margin: 8px 0;
+        padding: 8px;
+        background: #f4f7fc;
+        border-radius: 8px;
+      }
+      .book-btn {
+        display: block;
+        margin: 25px auto;
+        padding: 14px 28px;
+        background: #004aad;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        background: #fff;
+        padding: 22px;
+        border-radius: 12px;
+        display: none;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+      .popup button {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 0;
+        background: #004aad;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img
+        src="img/FullLogo.jpg"
+        alt="logo"
+        style="height: 50px; border-radius: 8px"
+      />
+      <h1>MeetX</h1>
+    </header>
+
+    <div class="box">
+      <h2>Review Booking</h2>
+
+      <div id="employee">
+        <div id="name" class="label"></div>
+        <div id="email" class="label"></div>
+        <div id="phone" class="label"></div>
+        <div id="org" class="label"></div>
+      </div>
+
+      <h2>Booking Details</h2>
+      <div id="date" class="label"></div>
+      <div id="start" class="label"></div>
+      <div id="end" class="label"></div>
+      <div id="purpose" class="label"></div>
+      <div id="room" class="label"></div>
+
+      <h2>Fare</h2>
+      <div id="fare" class="label">Total Fare: Calculating...</div>
+
+      <button class="book-btn" onclick="bookNow()">BOOK NOW</button>
+    </div>
+
+    <div id="popup" class="popup">
+      <h2>Room Booked Successfully!</h2>
+      <p>Your meeting room has been booked.</p>
+      <button onclick="downloadInvoice()">Download Invoice</button>
+      <button onclick="window.location.href='dashboard.html'">Go to Dashboard</button>
+    </div>
+
+    <script>
+      
+      window.onload = () => {
+        const keys = [
+          "name",
+          "email",
+          "phone",
+          "org",
+          "date",
+          "start",
+          "end",
+          "purpose",
+          "room",
+        ];
+        const labels = {
+          name: "Name",
+          email: "Email",
+          phone: "Phone",
+          org: "Organisation",
+          date: "Date",
+          start: "Start Time",
+          end: "End Time",
+          purpose: "Purpose",
+          room: "Room",
+        };
+        keys.forEach((k) => {
+          const val = sessionStorage.getItem(k) || "";
+          const el = document.getElementById(k);
+          if (el) el.textContent = `${labels[k]}: ${val}`;
+        });
+        previewFare();
+      };
+
+      async function previewFare() {
+        const fd = new FormData();
+        fd.append("start", sessionStorage.getItem("start") || "");
+        fd.append("end", sessionStorage.getItem("end") || "");
+        fd.append("room", sessionStorage.getItem("room") || "");
+        const res = await fetch("calcFare.php", { method: "POST", body: fd });
+        if (!res.ok) {
+          document.getElementById("fare").textContent =
+            "Unable to calculate fare";
+          return;
+        }
+        const data = await res.json();
+        if (data.error) {
+          document.getElementById("fare").textContent = data.error;
+          return;
+        }
+        document.getElementById(
+          "fare"
+        ).textContent = `Total Fare: ₹${data.fare} (${data.hours} hr at ₹${data.rate}/hr)`;
+      }
+
+      async function bookNow() {
+        const btn = document.querySelector(".book-btn");
+        btn.disabled = true;
+        btn.style.opacity = 0.6;
+
+        // prepare FormData as booking.php expects
+        const fd = new FormData();
+        [
+          "name",
+          "email",
+          "phone",
+          "org",
+          "date",
+          "start",
+          "end",
+          "purpose",
+          "room",
+        ].forEach((k) => {
+          fd.append(k, sessionStorage.getItem(k) || "");
+        });
+
+        const res = await fetch("booking.php", { method: "POST", body: fd });
+        if (res.status === 401) {
+          // not logged in -> redirect
+          alert("Please login to complete booking");
+          window.location.href = "login.html";
+          return;
+        }
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          alert(data.error || "Booking failed");
+          btn.disabled = false;
+          btn.style.opacity = 1;
+          return;
+        }
+
+        sessionStorage.setItem("booking_id", data.booking_id);
+        document.getElementById(
+          "fare"
+        ).textContent = `Total Fare: ₹${data.fare}`;
+        document.getElementById("popup").style.display = "block";
+      }
+
+      // download invoice
+      function downloadInvoice() {
+        const id = sessionStorage.getItem("booking_id");
+        if (!id) {
+          alert("No booking id");
+          return;
+        }
+        window.location.href =
+          "invoice.php?booking_id=" + encodeURIComponent(id);
+      }
+    </script>
+  </body>
+</html>

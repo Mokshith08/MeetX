@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Register — MeetX</title>
+    <link rel="icon" href="img/icon.jpg" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Inter, Poppins, system-ui;
+        background: linear-gradient(120deg, #eaf0ff, #f5f7fa);
+        margin: 0;
+        color: #1c1f22;
+      }
+
+      .center {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 520px;
+        padding: 36px;
+        border-radius: 16px;
+        box-shadow: 0 18px 40px rgba(2, 47, 115, 0.12);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .brand img {
+        height: 44px;
+        border-radius: 8px;
+      }
+
+      .brand h1 {
+        font-size: 24px;
+        margin: 0;
+        color: #004aad;
+      }
+
+      h2 {
+        margin: 6px 0 6px;
+        font-size: 26px;
+      }
+
+      .subtitle {
+        color: #55616b;
+        font-size: 15px;
+        margin-bottom: 22px;
+      }
+
+      .input-group {
+        margin-bottom: 14px;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid #d6deea;
+        font-size: 15px;
+        background: #f9fbff;
+        transition: 0.2s ease;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: #004aad;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.08);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        background: #004aad;
+        color: white;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 8px;
+        transition: 0.25s ease;
+      }
+
+      .btn:hover {
+        background: #003780;
+        transform: translateY(-1px);
+      }
+
+      #err {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #b00020;
+        display: none;
+      }
+
+      .footer-text {
+        margin-top: 18px;
+        font-size: 14px;
+        text-align: center;
+        color: #666;
+      }
+
+      .footer-text a {
+        color: #004aad;
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="center">
+      <div class="card">
+        <div class="brand">
+          <img src="img/FullLogo.jpg" alt="MeetX" />
+          <h1>MeetX</h1>
+        </div>
+
+        <h2>Create your account</h2>
+        <p class="subtitle">
+          Book meeting rooms, manage schedules, and download invoices.
+        </p>
+
+        <div class="input-group">
+          <input id="name" placeholder="Full name" />
+        </div>
+
+        <div class="input-group">
+          <input id="email" type="email" placeholder="Email address" />
+        </div>
+
+        <div class="input-group">
+          <input id="phone" placeholder="Phone number" />
+        </div>
+
+        <div class="input-group">
+          <input id="org" placeholder="Organisation name" />
+        </div>
+
+        <div class="input-group">
+          <input
+            id="password"
+            type="password"
+            placeholder="Password (minimum 6 characters)"
+          />
+        </div>
+
+        <button class="btn" onclick="register()">Create Account</button>
+
+        <p id="err"></p>
+
+        <div class="footer-text">
+          Already have an account?
+          <a href="login.html">Sign in</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function register() {
+        const payload = {
+          name: document.getElementById("name").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          org: document.getElementById("org").value.trim(),
+          password: document.getElementById("password").value,
+        };
+
+        const err = document.getElementById("err");
+        err.style.display = "none";
+
+        if (!payload.name || !payload.email || payload.password.length < 6) {
+          err.textContent = "Please fill all fields. Password must be at least 6 characters.";
+          err.style.display = "block";
+          return;
+        }
+
+        const res = await fetch("register.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          err.textContent = data.error || "Registration failed.";
+          err.style.display = "block";
+          return;
+        }
+
+        window.location.href = "dashboard.html";
+      }
+    </script>
+  </body>
+</html>

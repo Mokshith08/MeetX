@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MeetX — Meeting Room Booking</title>
+    <link rel="icon" href="img/icon.jpg" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Inter, Poppins, system-ui, Segoe UI, Roboto, Arial;
+        margin: 0;
+        background: #f5f7fa;
+        color: #1c1f22;
+      }
+      header {
+        background: linear-gradient(90deg, #0560d8, #004aad);
+        padding: 18px 24px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-left {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .logo {
+        height: 48px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+      }
+      .nav-links a {
+        color: rgba(255, 255, 255, 0.95);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .hero {
+        max-width: 1080px;
+        margin: 48px auto;
+        padding: 40px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(2, 47, 115, 0.08);
+        display: flex;
+        gap: 40px;
+        align-items: center;
+      }
+      .hero .left {
+        flex: 1;
+      }
+      .hero h1 {
+        font-size: 40px;
+        margin: 0;
+        color: #004aad;
+      }
+      .hero p {
+        color: #55616b;
+        margin-top: 12px;
+      }
+      .cta {
+        margin-top: 22px;
+        display: flex;
+        gap: 12px;
+      }
+      .btn {
+        background: #004aad;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: 0;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
+      .btn:hover {
+        background: #003a8c;
+        transform: scale(1.10);
+      }
+      .btnn {
+        background: #ffffff;
+        color: #004aad;
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: 2px solid #ffffff;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s ease;
+      }
+
+      .btnn:hover {
+        transform: scale(1.10);
+      }
+      .sections {
+        max-width: 1080px;
+        margin: 28px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .sections h2 {
+        grid-column: span 3;
+        color:#004aad;
+        text-align: center;
+      }
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(6, 50, 112, 0.06);
+        transition: 0.3s ease;
+        cursor: pointer;
+      }
+
+      .abt {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(6, 50, 112, 0.06);
+        max-width: 1080px; 
+        margin: 28px auto; 
+        padding: 20px
+      }
+      .abt p{
+        color: #55616b ; 
+        margin-top: 12px; 
+        line-height: 1.6
+      }
+      .abt h2 {
+        color:#004aad;
+      }
+      .card:hover {
+        box-shadow: 0 10px 30px rgba(6, 50, 112, 0.1);
+        transform: translateY(-10px);
+      }
+
+      .illus {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(6, 50, 112, 0.1);
+        transition: ease-in-out 0.3s;
+      }
+      .illus:hover {
+        transform: scale(1.03);
+      }
+
+      .contact-section {
+        max-width: 1080px;
+        margin: 60px auto;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(2, 47, 115, 0.08);
+      }
+
+      .contact-section h2 {
+        text-align: center;
+        color: #004aad;
+        margin-bottom: 10px;
+      }
+
+      .contact-sub {
+        text-align: center;
+        color: #55616b;
+        margin-bottom: 35px;
+      }
+
+      .contact-wrapper {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+      }
+
+      .contact-form .input-group {
+        margin-bottom: 18px;
+      }
+
+      .contact-form label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .contact-form input,
+      .contact-form textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #cfd9e3;
+        font-size: 15px;
+        background: #f9fbfc;
+      }
+
+      .contact-form input:focus,
+      .contact-form textarea:focus {
+        outline: none;
+        border-color: #004aad;
+        background: #fff;
+      }
+
+      .submit-btn {
+        margin-top: 10px;
+        width: 100%;
+        padding: 20px 20px;
+        font-size: 16px;
+        transition: 0.3s ease;
+        background: #004aad;
+        color: #fff;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+      }
+      .submit-btn:hover {
+        background: #003a8c;
+      }
+
+      .contact-info {
+        background: #f5f8ff;
+        padding: 25px;
+        border-radius: 12px;
+      }
+
+      .contact-info h3 {
+        margin-top: 0;
+        color: #004aad;
+      }
+
+      .contact-info p {
+        margin: 10px 0;
+        color: #333;
+      }
+
+      .contact-info .note {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      footer {
+        max-width: 1080px;
+        margin: 30px auto;
+        padding: 20px;
+        text-align: center;
+        color: #666;
+      }
+      @media (max-width: 900px) {
+        .hero {
+          flex-direction: column;
+        }
+        .sections {
+          grid-template-columns: 1fr;
+        }
+      }
+      .contact-wrapper {
+        grid-template-columns: 1fr;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav-left">
+        <img src="img/FullLogo.jpg" class="logo" alt="MeetX" />
+        <nav class="nav-links">
+          <a href="#home">Home</a>
+          <a href="#services">Services</a>
+          <a href="#about">About Us</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+      <div>
+        <button class="btnn" onclick="location.href='login.html'">Login</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="left">
+          <h1>Book meeting rooms quickly — MeetX</h1>
+          <p>
+            Clean, fast booking for teams. Pick a date, choose a room and
+            confirm — we handle the rest.
+          </p>
+          <div class="cta">
+            <button class="btn" onclick="location.href='login.html'">
+              Book Now
+            </button>
+          </div>
+        </div>
+        <div class="right">
+          <img src="img/hero.webp" alt="illustration" class="illus" />
+        </div>
+      </section>
+
+      <section class="sections" id="services">
+        <h2>Our Services</h2>
+        <div class="card">
+          <h3>Easy Booking</h3>
+          <p>Friendly forms and quick confirmations.</p>
+        </div>
+        <div class="card">
+          <h3>Secure Accounts</h3>
+          <p>Password hashed and secure sessions.</p>
+        </div>
+        <div class="card">
+          <h3>Invoices</h3>
+          <p>Download PDF invoices after booking.</p>
+        </div>
+      </section>
+
+      <section class="abt">
+        <h2>About MeetX</h2>
+        <p>MeetX is a modern meeting room booking system designed to simplify how
+    organisations manage shared meeting spaces. Instead of manual registers,
+    emails, or confusion over availability, MeetX provides a clean and
+    structured digital solution..</p>
+      </section>
+
+      <section class="contact-section" id="contact">
+        <h2>Contact Us</h2>
+        <p class="contact-sub">
+          Have questions or need support? Send us a message and we’ll get back
+          to you.
+        </p>
+
+        <div class="contact-wrapper">
+          <form class="contact-form" action="contact.php" method="POST">
+            <div class="input-group">
+              <label>Your Name</label>
+              <input
+                type="text"
+                name="name"
+                required
+                placeholder="Enter your name"
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="Enter your email"
+              />
+            </div>
+            
+            <div class="input-group">
+              <label>Message</label>
+              <textarea
+                name="message"
+                rows="5"
+                required
+                placeholder="Write your message here..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+          </form>
+
+          <div class="contact-info">
+            <h3>MeetX Office</h3>
+            <p><strong>Email:</strong> meetx.support@gmail.com</p>
+            <p><strong>Phone:</strong> NAN </p>
+            <p><strong>Location:</strong> NAN</p>
+            <p class="note">We usually respond within 24 hours.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>&COPY; 2025 MeetX — Designed by Mokshith</footer>
+  </body>
+</html>

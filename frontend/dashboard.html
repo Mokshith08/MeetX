@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard — MeetX</title>
+    <link rel="icon" href="img/icon.jpg" />
+
+    <style>
+      body {
+        font-family: Poppins, system-ui;
+        background: #f5f7fa;
+        color: #1c1f22;
+        margin: 0;
+      }
+
+      body.dark {
+        background: #0f1114;
+        color: #e8e8e8;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+        background: #ffffff;
+        box-shadow: 0 6px 20px rgba(2, 47, 115, 0.04);
+      }
+
+      body.dark .topbar {
+        background: #1a1d21;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+      }
+
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .logo {
+        height: 44px;
+        border-radius: 8px;
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 0;
+        background: #004aad;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 26px auto;
+        padding: 0 18px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 18px;
+      }
+
+      @media (max-width: 900px) {
+        .cards {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: #ffffff;
+        padding: 18px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(2, 47, 115, 0.04);
+      }
+
+      body.dark .card {
+        background: #1a1d21;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      }
+
+      .booking-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .booking-list li {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        margin-bottom: 10px;
+        background: #ffffff;
+      }
+
+      body.dark .booking-list li {
+        background: #1a1d21;
+        border-color: rgba(255, 255, 255, 0.08);
+      }
+
+      .small {
+        color: gray;
+        font-size: 13px;
+      }
+
+      body.dark .small {
+        color: #aaa;
+      }
+
+    
+      #profileInfo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      #profileText {
+        flex: 1;
+      }
+
+      .profile-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="topbar">
+      <div class="brand">
+        <img src="img/FullLogo.jpg" class="logo" alt="logo" />
+        <div>
+          <div style="font-weight: 700">MeetX</div>
+          <div style="font-size: 13px">Booking dashboard</div>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn" onclick="location.href='meet.html'">
+          Book Room
+        </button>
+        <button class="btn" id="themeToggle" onclick="toggleTheme()">
+          🌙 Dark
+        </button>
+        <button class="btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="cards">
+        <div class="card">
+          <h3 id="welcome">Welcome</h3>
+
+          <h4>Your Bookings</h4>
+          <ul id="bookings" class="booking-list">
+            <li>Loading…</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4>Profile</h4>
+
+          <div id="profileInfo">
+            <div id="profileText">Loading…</div>
+            <img src="img/avatar.jpg" class="profile-avatar" alt="Avatar" />
+          </div>
+
+          <hr />
+
+          <h4>Quick Links</h4>
+          <p><a href="#" onclick="goChooseRoom()">Choose Room</a></p>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const btn = document.getElementById("themeToggle");
+
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark");
+          btn.textContent = "☀ Light";
+        }
+      })();
+
+      function toggleTheme() {
+        const btn = document.getElementById("themeToggle");
+
+        if (document.body.classList.contains("dark")) {
+          document.body.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+          btn.textContent = "🌙 Dark";
+        } else {
+          document.body.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+          btn.textContent = "☀ Light";
+        }
+      }
+      function goChooseRoom() {
+        window.location.href = "meet.html";
+      }
+      
+            async function fetchMe() {
+        try {
+          const res = await fetch("me.php");
+          if (!res.ok) throw new Error("not logged in");
+
+          const d = await res.json();
+
+          document.getElementById("welcome").textContent = `Welcome, ${d.name}`;
+
+          document.getElementById("profileText").innerHTML = `
+            <strong>${d.name}</strong><br>
+            ${d.email}<br>
+            ${d.phone ?? ""}<br>
+            ${d.org ?? ""}
+          `;
+        } catch (e) {
+          window.location.href = "login.html";
+        }
+      }
+
+      async function loadBookings() {
+        const el = document.getElementById("bookings");
+        el.innerHTML = "<li>Loading…</li>";
+
+        const res = await fetch("mybookings.php");
+        if (!res.ok) {
+          el.innerHTML = "<li>Unable to load bookings</li>";
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!data.length) {
+          el.innerHTML = "<li>No bookings yet</li>";
+          return;
+        }
+
+        el.innerHTML = "";
+
+        for (const b of data) {
+          const li = document.createElement("li");
+
+          li.innerHTML = `
+            <strong>${b.room}</strong> — ${b.booking_date}
+            ${b.start_time} to ${b.end_time} <br>
+            Purpose: ${b.purpose || ""}<br>
+            Fare: ₹${b.fare} <br>
+            <small class="small">Booked: ${b.created_at}</small><br><br>
+
+            <button onclick="editBooking(${b.id})"
+              style="padding:6px 12px;border:none;background:#004aad;color:#fff;border-radius:6px;">
+              Edit
+            </button>
+
+            <button onclick="deleteBooking(${b.id})"
+              style="padding:6px 12px;border:none;background:#d00020;color:#fff;border-radius:6px;margin-left:8px;">
+              Delete
+            </button>
+          `;
+
+          el.appendChild(li);
+        }
+      }
+
+      function editBooking(id) {
+        sessionStorage.setItem("edit_booking_id", id);
+        window.location.href = "editBooking.html";
+      }
+
+      async function deleteBooking(id) {
+        if (!confirm("Are you sure you want to delete this booking?")) return;
+
+        const res = await fetch("crud.php?action=delete&id=" + id);
+        const data = await res.json();
+
+        if (data.success) {
+          alert("Booking deleted");
+          loadBookings();
+        } else {
+          alert("Failed to delete booking");
+        }
+      }
+
+      function logout() {
+        window.location.href = "logout.php";
+      }
+
+      fetchMe();
+      loadBookings();
+      
+    </script>
+  </body>
+</html>

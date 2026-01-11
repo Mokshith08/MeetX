@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login — MeetX</title>
+    <link rel="icon" href="img/icon.jpg" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Poppins, system-ui;
+        background: #f5f7fa;
+      }
+      .split {
+        display: flex;
+        min-height: 100vh;
+      }
+      .left {
+        flex: 1;
+        background: linear-gradient(180deg, #0560d8, #004aad);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 40px;
+      }
+      .left h1 {
+        font-size: 32px;
+        margin: 0;
+      }
+      .left p {
+        opacity: 0.9;
+        margin-top: 12px;
+      }
+      .right {
+        flex: 1;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+      }
+      .card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 12px 30px rgba(2, 47, 115, 0.06);
+      }
+      .input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-top: 12px;
+      }
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 0;
+        background: #004aad;
+        color: #fff;
+        font-weight: 700;
+        margin-top: 14px;
+        cursor: pointer;
+      }
+      .small {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        color: #666;
+        font-size: 14px;
+      }
+      .link {
+        color: #004aad;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      @media (max-width: 800px) {
+        .split {
+          flex-direction: column;
+        }
+        .left {
+          padding: 28px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="split">
+      <div class="left">
+        <h1>Welcome back to MeetX</h1>
+        <p>
+          Securely sign in to manage bookings, view past bookings and download
+          invoices.
+        </p>
+        <p style="margin-top: 18px">
+          <button
+            onclick="location.href='index.html'"
+            style="
+              padding: 10px 14px;
+              border-radius: 8px;
+              border: 0;
+              background: rgba(255, 255, 255, 0.12);
+              color: #fff;
+              cursor: pointer;
+            "
+          >
+            Back to Home
+          </button>
+        </p>
+      </div>
+
+      <div class="right">
+        <div class="card">
+          <h2 style="margin: 0">Sign in</h2>
+          <p style="color: #666; margin-top: 6px">Use your company email</p>
+
+          <input id="email" class="input" type="email" placeholder="Email" />
+          <input
+            id="password"
+            class="input"
+            type="password"
+            placeholder="Password"
+          />
+          <div class="small">
+            <label><input id="remember" type="checkbox" /> Remember</label>
+            <a class="link" href="register.html">Create account</a>
+          </div>
+          <button class="btn" onclick="login()">Login</button>
+          <p
+            id="err"
+            style="color: #b00020; margin-top: 12px; display: none"
+          ></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function login() {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const err = document.getElementById("err");
+        err.style.display = "none";
+        if (!email || !password) {
+          err.textContent = "Enter email and password";
+          err.style.display = "block";
+          return;
+        }
+
+        const res = await fetch("login.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          err.textContent = data.error || "Login failed";
+          err.style.display = "block";
+          return;
+        }
+
+        // success -> redirect to dashboard
+        window.location.href = "dashboard.html";
+      }
+    </script>
+  </body>
+</html>

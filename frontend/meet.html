@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Meeting Room</title>
+    <link rel="icon" href="img/icon.jpg" />
+    <style>
+      body {
+        font-family: Poppins, system-ui;
+        background: #eef3f8;
+        margin: 0;
+      }
+      header {
+        background: #004aad;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+      .booking-section {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 18px;
+        padding: 32px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+      }
+      .form-group {
+        margin-bottom: 18px;
+      }
+      label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #d7e1ec;
+        background: #f9fbfc;
+      }
+      .form-row {
+        display: flex;
+        gap: 32px;
+        margin-bottom: 18px;
+      }
+      #next {
+        width: 100%;
+        padding: 16px;
+        background: #004aad;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      @media (max-width: 700px) {
+        .form-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img
+        src="img/FullLogo.jpg"
+        alt="MeetX"
+        style="height: 44px; border-radius: 8px"
+      />
+      <h1 style="margin: 6px 0 0 0">MeetX</h1>
+    </header>
+
+    <section class="booking-section">
+      <h2>Book Your Meeting Room</h2>
+
+      <form id="bookingForm" onsubmit="rooms(event)">
+        <div class="form-group">
+          <label>Employee Name:</label>
+          <input type="text" id="name" required />
+        </div>
+
+        <div class="form-group">
+          <label>Employee Email:</label>
+          <input type="email" id="email" required />
+        </div>
+
+        <div class="form-row">
+          <div style="flex: 1">
+            <label>Phone Number:</label>
+            <input type="text" id="phone" required />
+          </div>
+          <div style="flex: 1">
+            <label>Organisation Name:</label>
+            <input type="text" id="org" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div style="flex: 1">
+            <label>Select Date:</label>
+            <input type="date" id="date" required />
+          </div>
+
+          <div style="flex: 1">
+            <label>Start Time:</label>
+            <input type="time" id="start" required />
+          </div>
+
+          <div style="flex: 1">
+            <label>End Time:</label>
+            <input type="time" id="end" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Meeting Purpose:</label>
+          <textarea id="purpose" required></textarea>
+        </div>
+
+        <button id="next" type="submit">Next → Select Room</button>
+      </form>
+    </section>
+
+    <script>
+      function rooms(e) {
+        e.preventDefault();
+        // basic validation
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        if (!name || !email) {
+          alert("Please enter name and email");
+          return;
+        }
+
+        sessionStorage.setItem("name", name);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem(
+          "phone",
+          document.getElementById("phone").value.trim()
+        );
+        sessionStorage.setItem(
+          "org",
+          document.getElementById("org").value.trim()
+        );
+        sessionStorage.setItem("date", document.getElementById("date").value);
+        sessionStorage.setItem("start", document.getElementById("start").value);
+        sessionStorage.setItem("end", document.getElementById("end").value);
+        sessionStorage.setItem(
+          "purpose",
+          document.getElementById("purpose").value.trim()
+        );
+
+        window.location.href = "rooms.html";
+      }
+    </script>
+  </body>
+</html>
