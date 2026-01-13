@@ -156,17 +156,19 @@ MeetX
 The complete academic documentation is included in this repository.
 
 📘 **DBMS Mini Project Report**  
-`report/MeetX.pdf`
+
+👉 [📄 Click here to view the full project report (PDF)](report/MeetX.pdf)
+
 
 The report includes:
 - Abstract
+- Introduction
 - Literature Review
 - Problem Statement & Objectives
-- System Architecture
-- Database Schema Diagram
-- Functional & Non-Functional Requirements
-- Results & Screenshots
-- Conclusion & Future Scope
+- Methodology
+- Results
+- Conclusion
+- References
 
 ---
 
